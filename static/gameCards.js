@@ -6,7 +6,7 @@ const gameContainer = document.querySelector(".game-container");
 const result = document.getElementById("result");
 const controls = document.querySelector(".controls-container");
 
-let cards;
+let card;
 let interval;
 
 let firstCard = false;
@@ -23,7 +23,6 @@ const items = [
   { name: "unicorn", image: "pngwing.com (6).png" },
   { name: "tRex", image: "pngwing.com (7).png" },
   { name: "stiracozavr", image: "pngwing.com (8).png" },
-
 ];
 
 // інтервал
@@ -35,7 +34,7 @@ let movesCount = 0,
   winCount = 0;
 
 //таймер
-const timeGenerator = () => {
+var timeGenerator = () => {
   seconds += 1;
   //хвилини
   if (seconds >= 60) {
@@ -44,15 +43,16 @@ const timeGenerator = () => {
   }
   //
   let secondsValue = seconds < 10 ? `0${seconds}` : seconds;
-  let minutesValue = minutes < 10 ? `0${minutes}` : minutes;
+  let minutesValue = minutes <  10 ? `0${minutes}` : minutes;
   // додаєм видимий час
   timeValue.innerHTML = `<span>Час:</span> ${minutesValue} : ${secondsValue} `;
+
 };
 
 // створюємо рахунок ходів
 const movesCounter = () => {
   movesCount += 1;
-  moves.innerHTML = `<span>Ходи:</span> ${movesCount} `;
+  moves.innerHTML = `<span>Ходи:</span>  ${movesCount}`;
 };
 
 // розташовуємо рандомно об'єкти
@@ -90,23 +90,26 @@ const matrixGenerator = (cardValue, size = 4) => {
   //grid
   gameContainer.style.gridTemplateColumns = `repeat(${size}, 100px)`;
 
-  cards = document.querySelectorAll(".card-conteiner");
-  cards.forEach((card) => {
+  card = document.querySelectorAll(".card-container");
+  card.forEach((card) => {
     card.addEventListener("click", () => {
       //якщо вибрана карта не збігається то карта яка була вибрана до неї ігнорується
+      if(this.classList.contains('active'))
+      //
+
       if (!card.classList.contains("matched")) {
         // flip
         card.classList.add("flipped");
         if (!firstCard) {
+          secondCard = card;
           firstCard = card;
-
           firstCardValue = card.getAttribute("data-card-value");
         } else {
           // збільшуємо кількість ходів оскільки гравець вибрав другу карту
           movesCounter();
           secondCard = card;
           let secondCardValue = card.getAttribute("data-card-value");
-          if (firstCardValue === secondCardValue) {
+          if (firstCardValue == secondCardValue) {
             // якщо обидні карти збігаються то додаємо відповідний клас щоб вони ігнорувались надалі
             firstCard.classList.add("matched");
             secondCard.classList.add("matched");
@@ -115,8 +118,8 @@ const matrixGenerator = (cardValue, size = 4) => {
             // збільшуємо кількість виграшів оскільки карти були однакові
             winCount += 1;
 
-            if (winCount === Math.floor(cardValue.length / 2)) {
-              result.innerHTML = `<h2>Ви виграли!</h2> : <h4> Ходи : ${movesCount}</h4>`;
+            if (winCount == Math.floor(cardValue.length / 2)) {
+              result.innerHTML = `<h2>Ви виграли!</h2><h4> Ходи : ${movesCount} </h4> `;
               stopGame();
             }
           } else {
@@ -127,42 +130,39 @@ const matrixGenerator = (cardValue, size = 4) => {
             let delay = setTimeout(() => {
               tempFirst.classList.remove("flipped");
               tempSecond.classList.remove("flipped");
-            }, );
+            }, 1000);
           }
         }
       }
     });
   });
 };
-// початок гри 
+// початок гри
 // видаляємо початкову кнопку старт і показуємо саму гру
 startButton.addEventListener("click", () => {
-    controls.classList.add("hide");
-    stopButton.classList.remove("hide");
-    startButton.classList.add("hide");
+  movesCount = 0;
+  seconds = 0;
+  minutes = 0;
+  controls.classList.add("hide");
+  stopButton.classList.remove("hide");
+  startButton.classList.add("hide");
+  //починаємо відлік в таймері та ходів
+  interval = setInterval(timeGenerator,  1000,);
+  moves.innerHTML = `<span>Ходи: </span> ${movesCount}`;
 
-    //починаємо відлік в таймері та ходів
-    interval = setInterval(timeGenerator, 1000);
-
-    // відлік на ходи але чомусь помилка
-    //переглянути це питання
-    //переглянути це питання
-    //переглянути це питання
-    //переглянути це питання
-    //переглянути це питання
-    //переглянути це питання
-    //переглянути це питання
-    // moves.innerHTML = `<span>Ходи: ${movesCount}</span>`;
-    initializer()
+  initializer();
 });
 
-// кінець гри 
-stopButton.addEventListener("click", (stopGame = () => {
+// кінець гри
+stopButton.addEventListener(
+  "click",
+  (stopGame = () => {
     controls.classList.remove("hide");
     stopButton.classList.add("hide");
     startButton.classList.remove("hide");
     clearInterval(interval);
-}));
+  })
+);
 
 //
 const initializer = () => {
@@ -171,5 +171,3 @@ const initializer = () => {
   console.log(cardValue);
   matrixGenerator(cardValue);
 };
-
-

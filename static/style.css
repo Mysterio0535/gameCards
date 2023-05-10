@@ -66,13 +66,13 @@ backface-visibility: hidden;
    transform: rotateY(180deg);
 }
 
-.card-container .flipped .card-before{
+.card-container.flipped .card-before{
     transform: rotateY(180deg)
 }
 
 
-.card-container .flipped .card-after{
-    transform: rotateY(180deg)
+.card-container.flipped .card-after{
+    transform: rotateY(0deg)
 }
 
 
@@ -128,4 +128,13 @@ cursor: pointer;
 
 #result {
     text-align: center;
+}
+
+#result h2 {
+    font-size: 24px;
+}
+
+#result h4 {
+    font-size: 15px;
+    margin: 10px;
 }
