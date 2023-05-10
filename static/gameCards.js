@@ -12,6 +12,7 @@ let interval;
 let firstCard = false;
 let secondCard = false;
 
+
 // items array
 const items = [
   { name: "squirrel", image: "pngwing.com.png" },
@@ -33,8 +34,12 @@ let minutes = 0;
 let movesCount = 0,
   winCount = 0;
 
+// cards
+let firstCardValue = card;
+let secondCardValue = card;
+
 //таймер
-var timeGenerator = () => {
+let timeGenerator = () => {
   seconds += 1;
   //хвилини
   if (seconds >= 60) {
@@ -94,9 +99,9 @@ const matrixGenerator = (cardValue, size = 4) => {
   card.forEach((card) => {
     card.addEventListener("click", () => {
       //якщо вибрана карта не збігається то карта яка була вибрана до неї ігнорується
-      if(this.classList.contains('active'))
-      //
 
+        
+      
       if (!card.classList.contains("matched")) {
         // flip
         card.classList.add("flipped");
@@ -104,19 +109,25 @@ const matrixGenerator = (cardValue, size = 4) => {
           secondCard = card;
           firstCard = card;
           firstCardValue = card.getAttribute("data-card-value");
-        } else {
+
+        
+          // забороняємо першій вікдкритій карті знову 
+        if (card.querySelector("flipped")) {
+          firstCard.remove("click")
+        }
+        
+      }else {
           // збільшуємо кількість ходів оскільки гравець вибрав другу карту
           movesCounter();
           secondCard = card;
-          let secondCardValue = card.getAttribute("data-card-value");
+          secondCardValue = card.getAttribute("data-card-value");
           if (firstCardValue == secondCardValue) {
             // якщо обидні карти збігаються то додаємо відповідний клас щоб вони ігнорувались надалі
             firstCard.classList.add("matched");
             secondCard.classList.add("matched");
             // встановлюємо для першої карти фолс так як тепер наступна карта буде першою
             firstCard = false;
-            // збільшуємо кількість виграшів оскільки карти були однакові
-            winCount += 1;
+
 
             if (winCount == Math.floor(cardValue.length / 2)) {
               result.innerHTML = `<h2>Ви виграли!</h2><h4> Ходи : ${movesCount} </h4> `;
@@ -130,7 +141,7 @@ const matrixGenerator = (cardValue, size = 4) => {
             let delay = setTimeout(() => {
               tempFirst.classList.remove("flipped");
               tempSecond.classList.remove("flipped");
-            }, 1000);
+            }, 700);
           }
         }
       }
@@ -147,7 +158,8 @@ startButton.addEventListener("click", () => {
   stopButton.classList.remove("hide");
   startButton.classList.add("hide");
   //починаємо відлік в таймері та ходів
-  interval = setInterval(timeGenerator,  1000,);
+  timeGenerator()
+  interval = setInterval(timeGenerator, 1000);
   moves.innerHTML = `<span>Ходи: </span> ${movesCount}`;
 
   initializer();
